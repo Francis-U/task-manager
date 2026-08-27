@@ -1,0 +1,85 @@
+                TASK MANAGER
+                     │
+                     ▼
+              ┌─────────────┐
+              │   LEVEL 1   │
+              │ useState    │
+              │ Props       │
+              │ Events      │
+              └──────┬──────┘
+                     ▼
+              ┌─────────────┐
+              │   LEVEL 2   │
+              │ Components  │
+              │ map()       │
+              │ Conditions  │
+              └──────┬──────┘
+                     ▼
+              ┌─────────────┐
+              │   LEVEL 3   │
+              │ Search      │
+              │ Filtering   │
+              │ useMemo     │
+              └──────┬──────┘
+                     ▼
+              ┌─────────────┐
+              │   LEVEL 4   │
+              │ Forms       │
+              │ Editing     │
+              └──────┬──────┘
+                     ▼
+              ┌─────────────┐
+              │   LEVEL 5   │
+              │   NEXT.JS   │
+              │ Server/     │
+              │ Client      │
+              └──────┬──────┘
+                     ▼
+              ┌─────────────┐
+              │   LEVEL 6   │
+              │ Routing     │
+              │ Dynamic     │
+              │ Routes      │
+              └──────┬──────┘
+                     ▼
+              ┌─────────────┐
+              │   LEVEL 7   │
+              │ URL State   │
+              │ SearchParams│
+              └──────┬──────┘
+                     ▼
+              ┌─────────────┐
+              │   LEVEL 8   │
+              │  SUPABASE   │
+              │ Database    │
+              └──────┬──────┘
+                     ▼
+              ┌─────────────┐
+              │   LEVEL 9   │
+              │ Server vs   │
+              │ Client      │
+              └──────┬──────┘
+                     ▼
+              ┌─────────────┐
+              │  LEVEL 10   │
+              │ Loading     │
+              │ Errors      │
+              │ Not Found   │
+              └──────┬──────┘
+                     ▼
+              ┌─────────────┐
+              │  LEVEL 11   │
+              │ React Query │
+              └──────┬──────┘
+                     ▼
+              ┌─────────────┐
+              │  LEVEL 12   │
+              │ Context     │
+              │ Redux       │
+              └──────┬──────┘
+                     ▼
+              ┌─────────────┐
+              │  LEVEL 13   │
+              │ Production  │
+              │ Ready       │
+              └─────────────┘
