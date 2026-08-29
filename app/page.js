@@ -7,6 +7,8 @@ import TaskItem from "./components/TaskItem";
 export default function Home() {
   const [task, setTask] = useState("");
   const [arr, setArr] = useState([]);
+  const [search, setSearch] = useState("");
+  let display = [];
 
   function handleClick() {
     setArr([...arr, { text: task, checked: false }]);
@@ -26,15 +28,29 @@ export default function Home() {
           />
           <button onClick={handleClick}>Add Task</button>
         </div>
-
+        <input
+          type="text"
+          placeholder="search your task"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            arr.map((item, index) =>
+              Object.values(item).includes(search)
+                ? console.log(item)
+                : console.log("null"),
+            );
+          }}
+        />
         {arr.map((item, index) => (
-          <TaskItem
-            key={index}
-            item={item}
-            index={index}
-            arr={arr}
-            setArr={setArr}
-          />
+          <>
+            <TaskItem
+              key={index}
+              item={item}
+              index={index}
+              arr={arr}
+              setArr={setArr}
+            />
+          </>
         ))}
       </main>
       {/* {arr.map((data, i) => console.log(data))} */}
