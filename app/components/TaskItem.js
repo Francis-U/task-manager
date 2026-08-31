@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function TaskItem({ item, index, arr, setArr }) {
+export default function TaskItem({ item, index, arr, setArr, handleDelete }) {
   const [editingIndex, setEditingIndex] = useState(null);
 
   function handleClick() {
@@ -44,7 +44,8 @@ export default function TaskItem({ item, index, arr, setArr }) {
 
       <button
         className="cursor-pointer"
-        onClick={() => setArr(arr.filter((_, i) => i !== index))}
+        // onClick={() => setArr(arr.filter((_, i) => i !== index))}
+        onClick={() => handleDelete(index)}
       >
         Delete
       </button>

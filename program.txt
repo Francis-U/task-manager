@@ -1,3 +1,144 @@
+                       TASK MANAGER
+                            │
+                            ▼
+                  ┌─────────────────┐
+                  │     LEVEL 1     │
+                  │ useState        │
+                  │ Props           │
+                  │ Events          │
+                  │ Controlled      │
+                  │ Inputs          │
+                  │ State updates   │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │     LEVEL 2     │
+                  │ Components      │
+                  │ map()           │
+                  │ Conditional     │
+                  │ Rendering       │
+                  │ Component       │
+                  │ composition     │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │     LEVEL 3     │
+                  │ Search          │
+                  │ Filtering       │
+                  │ Derived State   │
+                  │ useMemo         │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │     LEVEL 4     │
+                  │ Forms           │
+                  │ Form validation │
+                  │ Editing         │
+                  │ CRUD thinking   │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │     LEVEL 5     │
+                  │ useCallback     │
+                  │ React.memo      │
+                  │ Referential     │
+                  │ equality       │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │     LEVEL 6     │
+                  │ useEffect       │
+                  │ Effects         │
+                  │ Cleanup         │
+                  │ Browser APIs    │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │     LEVEL 7     │
+                  │ NEXT.JS         │
+                  │ Server/Client   │
+                  │ Server Actions  │
+                  │ Data fetching   │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │     LEVEL 8     │
+                  │ Routing         │
+                  │ Dynamic Routes  │
+                  │ Link            │
+                  │ useRouter       │
+                  │ useParams       │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │     LEVEL 9     │
+                  │ URL State       │
+                  │ searchParams    │
+                  │ useSearchParams │
+                  │ URL-driven UI   │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │    LEVEL 10     │
+                  │ SUPABASE        │
+                  │ Database        │
+                  │ CRUD            │
+                  │ Storage         │
+                  │ Authentication │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │    LEVEL 11     │
+                  │ Async UI        │
+                  │ Loading states  │
+                  │ Suspense        │
+                  │ Error handling  │
+                  │ error.js       │
+                  │ not-found.js    │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │    LEVEL 12     │
+                  │ React Query     │
+                  │ useQuery        │
+                  │ useMutation     │
+                  │ caching         │
+                  │ invalidation    │
+                  │ optimistic UI   │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │    LEVEL 13     │
+                  │ Context API     │
+                  │ useReducer      │
+                  │ Redux Toolkit   │
+                  │ Global State    │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │    LEVEL 14     │
+                  │ Performance     │
+                  │ Code splitting  │
+                  │ lazy()          │
+                  │ Suspense        │
+                  │ profiling       │
+                  └────────┬────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │    LEVEL 15     │
+                  │ Production      │
+                  │ SEO             │
+                  │ Metadata        │
+                  │ Security        │
+                  │ Deployment      │
+                  │ Env variables   │
+                  │ Error strategy  │
+                  └─────────────────┘
+                
+                
+                
+                
+                
                 TASK MANAGER
                      │
                      ▼
