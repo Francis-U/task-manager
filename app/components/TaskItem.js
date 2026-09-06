@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useState } from "react";
 
-export default function TaskItem({ item, index, arr, setArr, handleDelete }) {
+function TaskItem({ item, index, arr, setArr, handleDelete }) {
   const [editingIndex, setEditingIndex] = useState(null);
 
   function handleClick() {
@@ -10,7 +10,7 @@ export default function TaskItem({ item, index, arr, setArr, handleDelete }) {
   }
 
   return (
-    <div key={index}>
+    <div>
       {/* (e) => setIsChecked(e.target.value) */}
       <input
         type="checkbox"
@@ -52,3 +52,4 @@ export default function TaskItem({ item, index, arr, setArr, handleDelete }) {
     </div>
   );
 }
+export default memo(TaskItem);
