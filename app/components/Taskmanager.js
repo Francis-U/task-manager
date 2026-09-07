@@ -1,9 +1,17 @@
 "use client";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useActionState,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import ServerInfo from "./ServerInfo";
 import TaskItem from "./TaskItem";
 import TaskStats from "./TaskStats";
 import TaskHeader from "./TaskHeader";
+import { displayText } from "../actions";
 
 export default function Taskmanager() {
   const [task, setTask] = useState("");
@@ -71,7 +79,7 @@ export default function Taskmanager() {
   }, [arr.length]);
 
   function handleSubmit(e) {
-    e.preventDefault();
+    // e.preventDefault();
     setArr([...arr, { text: task, checked: false }]);
     setTask("");
   }
@@ -83,19 +91,26 @@ export default function Taskmanager() {
     [arr],
   );
 
+  const [state, formAction, isPending] = useActionState(displayText, "");
+  // console.log(formAction);
+  // console.log(displayText);
+
   return (
     <div>
       <div className="mb-15">
         <TaskHeader />
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} action={formAction}>
           <input
             type="text"
             ref={inputRef}
             placeholder="input your task"
             value={task}
+            name="task"
             onChange={(e) => setTask(e.target.value)}
           />
-          <button>Add Task</button>
+          <button disabled={isPending}>
+            {isPending ? "Submitting" : "Add Task"}
+          </button>
         </form>
       </div>
       <input
@@ -119,6 +134,7 @@ export default function Taskmanager() {
       <TaskStats length={arr.length} />
 
       {showMessage && <div>Task added</div>}
+      {state && <div>new task: {state}</div>}
       <ServerInfo />
     </div>
   );
