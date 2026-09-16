@@ -12,6 +12,8 @@ import TaskItem from "./TaskItem";
 import TaskStats from "./TaskStats";
 import TaskHeader from "./TaskHeader";
 import { displayText } from "../actions";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Taskmanager() {
   const [task, setTask] = useState("");
@@ -21,7 +23,11 @@ export default function Taskmanager() {
 
   const inputRef = useRef(null);
   const taskRef = useRef(null);
+  const router = useRouter();
+  // const externalList = ExternalTask;
 
+  // console.log("externallist");
+  // console.log(externalList);
   useEffect(() => {
     taskRef.current = task;
   }, [task]);
@@ -136,6 +142,13 @@ export default function Taskmanager() {
       {showMessage && <div>Task added</div>}
       {state && <div>new task: {state}</div>}
       <ServerInfo />
+
+      <Link href="/about">About</Link>
+      <nav>
+        <Link href="/settings/profile">settings</Link>
+      </nav>
+
+      <button onClick={() => router.refresh()}>Refresh Tasks</button>
     </div>
   );
 }

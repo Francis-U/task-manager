@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { memo, useState } from "react";
 
 function TaskItem({ item, index, arr, setArr, handleDelete }) {
   const [editingIndex, setEditingIndex] = useState(null);
-
+  const router = useRouter();
   function handleClick() {
     editingIndex == null ? setEditingIndex(index) : setEditingIndex(null);
   }
@@ -48,6 +50,15 @@ function TaskItem({ item, index, arr, setArr, handleDelete }) {
         onClick={() => handleDelete(index)}
       >
         Delete
+      </button>
+      <Link href={`/task/${index}/?filter=completed&sort=latest`}>
+        Navigate to task with filter
+      </Link>
+      <button onClick={() => router.push(`/task/${index}/`)}>
+        Navigate to task
+      </button>
+      <button onClick={() => router.replace(`/task/${index}/`)}>
+        Replace with task
       </button>
     </div>
   );
