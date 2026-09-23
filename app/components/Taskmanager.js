@@ -14,12 +14,31 @@ import TaskHeader from "./TaskHeader";
 import { displayText } from "../actions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import getTableData from "@/app/services/getTableData";
 
 export default function Taskmanager() {
   const [task, setTask] = useState("");
   const [arr, setArr] = useState([]);
   const [search, setSearch] = useState("");
   const [showMessage, setShowMessage] = useState(false);
+
+  const {
+    data: tableData,
+    isPending: isPendingTableData,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["tableData"],
+    queryFn: getTableData,
+    // initialData: [],
+  });
+
+  // if (condition) {
+  // }
+
+  // console.log("tableData");
+  // console.log(tableData);
 
   const inputRef = useRef(null);
   const taskRef = useRef(null);
@@ -60,33 +79,33 @@ export default function Taskmanager() {
 
   const filteredTasks = useMemo(
     () =>
-      arr.filter((item) =>
+      (tableData ?? []).filter((item) =>
         item.text.toLowerCase().includes(search.toLowerCase()),
       ),
-    [arr, search],
+    [tableData, search],
   );
-  const previousLength = useRef(arr.length);
+  const previousLength = useRef(tableData?.length ?? 0);
 
   useEffect(() => {
-    if (arr.length > previousLength.current) {
+    if (tableData?.length > previousLength.current) {
       setShowMessage(true);
 
       const timer = setTimeout(() => {
         setShowMessage(false);
       }, 3000);
 
-      previousLength.current = arr.length;
+      previousLength.current = tableData?.length;
       return () => {
         clearTimeout(timer);
       };
     }
 
-    previousLength.current = arr.length;
-  }, [arr.length]);
+    previousLength.current = tableData?.length;
+  }, [tableData?.length]);
 
   function handleSubmit(e) {
     // e.preventDefault();
-    setArr([...arr, { text: task, checked: false }]);
+    // setArr([...arr, { text: task, checked: false }]);
     setTask("");
   }
 
@@ -97,9 +116,22 @@ export default function Taskmanager() {
     [arr],
   );
 
+  async function updateTxt(index, textValue) {
+    // console.log(index,textValue)
+    prompt(`index ${index} ${textValue}`);
+  }
+
   const [state, formAction, isPending] = useActionState(displayText, "");
   // console.log(formAction);
   // console.log(displayText);
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (!isPending && state) {
+      queryClient.invalidateQueries({ queryKey: ["tableData"] });
+    }
+  }, [isPending, state, queryClient]);
 
   return (
     <div>
@@ -134,10 +166,12 @@ export default function Taskmanager() {
           index={index}
           arr={arr}
           setArr={setArr}
+          tableData={tableData}
+          updateTxt={updateTxt}
           handleDelete={handleDelete}
         />
       ))}
-      <TaskStats length={arr.length} />
+      <TaskStats length={tableData?.length ?? 0} />
 
       {showMessage && <div>Task added</div>}
       {state && <div>new task: {state}</div>}

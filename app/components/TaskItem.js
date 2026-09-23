@@ -1,8 +1,12 @@
 "use client";
 
+////my version
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { memo, useState } from "react";
+import { memo, useActionState, useEffect, useRef, useState } from "react";
+import { updateTxt, deleteTask, updateCheckbox } from "@/app/actions";
+import { useQueryClient } from "@tanstack/react-query";
 
 function TaskItem({ item, index, arr, setArr, handleDelete }) {
   const [editingIndex, setEditingIndex] = useState(null);
@@ -11,53 +15,136 @@ function TaskItem({ item, index, arr, setArr, handleDelete }) {
     editingIndex == null ? setEditingIndex(index) : setEditingIndex(null);
   }
 
+  const [state, formAction, isPending] = useActionState(updateTxt, "");
+  const [stateCheckbox, formActionCheckbox, isPendingCheckbox] = useActionState(
+    updateCheckbox,
+    "",
+  );
+
+  const queryClient = useQueryClient();
+  // console.log("state");
+  // console.log(state);
+
+  useEffect(() => {
+    if (!isPending && state) {
+      queryClient.invalidateQueries({ queryKey: ["tableData"] });
+    }
+  }, [state, isPending, queryClient]);
+
+  useEffect(() => {
+    if (!isPendingCheckbox && stateCheckbox) {
+      queryClient.invalidateQueries({ queryKey: ["tableData"] });
+    }
+  }, [stateCheckbox, isPendingCheckbox, queryClient]);
+
+  useEffect(() => {
+    if (state === "Update successful") {
+      setEditingIndex(null);
+    }
+  }, [state]);
+
+  const formRef = useRef(null);
   return (
     <div>
       {/* (e) => setIsChecked(e.target.value) */}
-      <input
-        type="checkbox"
-        checked={item.checked}
-        onChange={() => {
-          setArr(
-            arr.map((task, i) => {
-              return i === index ? { ...task, checked: !task.checked } : task;
-            }),
-          );
-        }}
-      />
+
+      {/* const [stateCheckbox, formActionCheckbox, isPendingCheckbox] = useActionState(
+    updateCheckbox,
+    "",
+  ); */}
+      <form ref={formRef} action={formActionCheckbox}>
+        <input type="hidden" name="id" value={item.id} />
+
+        <input
+          type="checkbox"
+          checked={item.checked}
+          // value={(e) => e.target.value}
+          name="checkbox"
+          // onChange={() => {
+          //   setArr(
+          //     arr.map((task, i) => {
+          //       return i === index ? { ...task, checked: !task.checked } : task;
+          //     }),
+          //   );
+          // }}
+          onChange={() => formRef.current.requestSubmit()}
+        />
+      </form>
+
       {/* <span>{item.text} </span> */}
-      <input
-        type="text"
-        name="item_text"
-        value={item.text}
-        disabled={editingIndex !== index}
-        onChange={(e) =>
-          setArr(
-            arr.map((task, i) =>
-              i === index ? { ...task, text: e.target.value } : task,
-            ),
-          )
-        }
-      />
+      <form action={formAction}>
+        {/* async function handleSave() {
+    await updateTxt(item.id, item.text);
+    setEditingIndex(null);
+  } */}
+        <input type="hidden" name="id" value={item.id} />
+        <input
+          type="text"
+          name="text"
+          defaultValue={item.text}
+          disabled={editingIndex !== index}
+          // onChange={(e) =>
+          //   setArr(
+          //     arr.map((task, i) =>
+          //       i === index ? { ...task, text: e.target.value } : task,
+          //     ),
+          //   )
+          // }
+        />
+        <button type="button" onClick={handleClick}>
+          Edit
+        </button>
 
-      <button className="cursor-pointer" onClick={() => handleClick()}>
-        {editingIndex !== index ? "Edit" : "Save"}
-      </button>
+        <button
+          type="submit"
+          hidden={editingIndex !== index}
+          disabled={isPending}
+        >
+          {isPending ? "saving" : "save"}
+        </button>
+        {/* {editingIndex !== index ? (
+          <button
+            type="button"
+            className="cursor-pointer"
+            // onClick={(e) => {
+            //   // e.preventDefault();
+            //   handleClick();
+            // }}
 
-      <button
-        className="cursor-pointer"
-        // onClick={() => setArr(arr.filter((_, i) => i !== index))}
-        onClick={() => handleDelete(index)}
-      >
-        Delete
-      </button>
-      <Link href={`/task/${index}/?filter=completed&sort=latest`}>
+            onClick={handleClick}
+          >
+            Edit
+          </button>
+        ) : (
+          <button
+            className="cursor-pointer"
+            type="submit"
+            // onClick={() => setEditingIndex(null)}
+          >
+            Save
+          </button>
+        )} */}
+      </form>
+
+      <form action={deleteTask}>
+        <input type="hidden" name="id" value={item.id} />
+
+        <button
+          className="cursor-pointer"
+          type="submit"
+          // onClick={() => setArr(arr.filter((_, i) => i !== index))}
+          // onClick={() => handleDelete(index)}
+        >
+          Delete
+        </button>
+      </form>
+      <Link href={`/task/${item.id}/?filter=completed&sort=latest`}>
         Navigate to task with filter
       </Link>
-      <button onClick={() => router.push(`/task/${index}/`)}>
+      <button onClick={() => router.push(`/task/${item.id}/`)}>
         Navigate to task
       </button>
-      <button onClick={() => router.replace(`/task/${index}/`)}>
+      <button onClick={() => router.replace(`/task/${item.id}/`)}>
         Replace with task
       </button>
     </div>
