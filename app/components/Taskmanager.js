@@ -163,7 +163,7 @@ export default function Taskmanager() {
         <TaskItem
           key={index}
           item={item}
-          index={index}
+          index={item.id}
           arr={arr}
           setArr={setArr}
           tableData={tableData}

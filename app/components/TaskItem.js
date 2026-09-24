@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { memo, useActionState, useEffect, useRef, useState } from "react";
 import { updateTxt, deleteTask, updateCheckbox } from "@/app/actions";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 function TaskItem({ item, index, arr, setArr, handleDelete }) {
   const [editingIndex, setEditingIndex] = useState(null);
@@ -20,6 +20,11 @@ function TaskItem({ item, index, arr, setArr, handleDelete }) {
     updateCheckbox,
     "",
   );
+
+  const { mutate, isPending: IsPendingmutate } = useMutation({
+    mutationFn: deleteTask,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tableData"] }),
+  });
 
   const queryClient = useQueryClient();
   // console.log("state");
@@ -125,8 +130,14 @@ function TaskItem({ item, index, arr, setArr, handleDelete }) {
           </button>
         )} */}
       </form>
-
-      <form action={deleteTask}>
+      {/* action={mutate} */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const formData = new FormData(e.currentTarget);
+          mutate(formData);
+        }}
+      >
         <input type="hidden" name="id" value={item.id} />
 
         <button
@@ -135,7 +146,7 @@ function TaskItem({ item, index, arr, setArr, handleDelete }) {
           // onClick={() => setArr(arr.filter((_, i) => i !== index))}
           // onClick={() => handleDelete(index)}
         >
-          Delete
+          {IsPendingmutate ? "Deleting..." : "Delete"}
         </button>
       </form>
       <Link href={`/task/${item.id}/?filter=completed&sort=latest`}>
