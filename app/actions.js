@@ -42,7 +42,7 @@ export async function updateTxt(previousState, formData) {
   if (error) {
     console.error(error);
     throw new Error("failed to update tasks");
-    return;
+    // return;
   }
 
   revalidatePath("/");
@@ -60,11 +60,11 @@ export async function deleteTask(formData) {
   const { error } = await supabase.from("tasks").delete().eq("id", id);
 
   if (error) {
-    console.error(error);
-    return;
+    // console.error(error);
+    throw new Error("Failed to delete task");
   }
 
-  revalidatePath("/");
+  // revalidatePath("/");
   return "Delete successful";
 }
 

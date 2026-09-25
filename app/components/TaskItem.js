@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { memo, useActionState, useEffect, useRef, useState } from "react";
 import { updateTxt, deleteTask, updateCheckbox } from "@/app/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 function TaskItem({ item, index, arr, setArr, handleDelete }) {
   const [editingIndex, setEditingIndex] = useState(null);
@@ -20,13 +21,56 @@ function TaskItem({ item, index, arr, setArr, handleDelete }) {
     updateCheckbox,
     "",
   );
-
-  const { mutate, isPending: IsPendingmutate } = useMutation({
+  const queryClient = useQueryClient();
+  const {
+    mutate,
+    isPending: IsPendingmutate,
+    isError,
+    error,
+  } = useMutation({
     mutationFn: deleteTask,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tableData"] }),
+
+    // onError: (error) => console.error("Failed to delete task:", error),
+    /// the above is used when you want something done if error happens
+    // So onError is mainly for side effects like alerts, toasts, logging, etc.
+
+    onMutate: async (newData) => {
+      const newId = newData.get("id");
+
+      ///cancel running queries
+      await queryClient.cancelQueries({ queryKey: ["tableData"] });
+      ////snapshot previousData
+      const previousData = queryClient.getQueryData(["tableData"]);
+
+      ///optimistic update
+      queryClient.setQueryData(["tableData"], (tableData) => {
+        // console.log("on mutate called");
+        // console.log(newId);
+
+        return tableData.filter((td) => td.id !== Number(newId));
+        // console.log(tableData);
+      });
+      // queryClient.setQueryData(["tableData"], (tableData) => {
+      //   const updated = tableData.filter((td) => td.id !== newId);
+      //   console.log("OPTIMISTIC DATA:", updated);
+      //   return updated;
+      // });
+      ///return context
+      return { previousData };
+    },
+
+    onError: (error, newData, context) => {
+      ////rollback the optimistic update
+      if (context?.previousData) {
+        queryClient.setQueryData(["tableData"], context.previousData);
+      }
+
+      ///show error
+      toast.error(`an error occurred: ${error.message}`);
+    },
   });
 
-  const queryClient = useQueryClient();
   // console.log("state");
   // console.log(state);
 
@@ -132,14 +176,15 @@ function TaskItem({ item, index, arr, setArr, handleDelete }) {
       </form>
       {/* action={mutate} */}
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          const formData = new FormData(e.currentTarget);
-          mutate(formData);
-        }}
+        // onSubmit={(e) => {
+        //   e.preventDefault();
+        //   const formData = new FormData(e.currentTarget);
+        //   mutate(formData);
+        // }}
+        action={mutate}
       >
         <input type="hidden" name="id" value={item.id} />
-
+        {isError && <div>An error occurred: {error.message}</div>}
         <button
           className="cursor-pointer"
           type="submit"

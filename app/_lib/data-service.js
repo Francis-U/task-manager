@@ -2,7 +2,7 @@ import { supabase } from "./supabase";
 
 export async function getTableData() {
   let { data: tasks, error } = await supabase.from("tasks").select("*");
-
+  console.log("GET TABLE");
   if (error) {
     console.error(error);
   }

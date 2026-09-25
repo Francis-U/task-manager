@@ -34,6 +34,9 @@ export default function Taskmanager() {
     // initialData: [],
   });
 
+  // console.log("tableData from useQuery:", tableData);
+  const queryClient = useQueryClient();
+
   // if (condition) {
   // }
 
@@ -125,7 +128,7 @@ export default function Taskmanager() {
   // console.log(formAction);
   // console.log(displayText);
 
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!isPending && state) {
@@ -161,7 +164,7 @@ export default function Taskmanager() {
       />
       {filteredTasks.map((item, index) => (
         <TaskItem
-          key={index}
+          key={item.id}
           item={item}
           index={item.id}
           arr={arr}
