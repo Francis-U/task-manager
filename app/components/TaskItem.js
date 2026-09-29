@@ -29,7 +29,8 @@ function TaskItem({ item, index, arr, setArr, handleDelete }) {
     error,
   } = useMutation({
     mutationFn: deleteTask,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tableData"] }),
+    // onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tableData"] }),
+    // the above is now handled with onSettled
 
     // onError: (error) => console.error("Failed to delete task:", error),
     /// the above is used when you want something done if error happens
@@ -44,11 +45,11 @@ function TaskItem({ item, index, arr, setArr, handleDelete }) {
       const previousData = queryClient.getQueryData(["tableData"]);
 
       ///optimistic update
-      queryClient.setQueryData(["tableData"], (tableData) => {
+      queryClient.setQueryData(["tableData"], (currentTableData) => {
         // console.log("on mutate called");
         // console.log(newId);
 
-        return tableData.filter((td) => td.id !== Number(newId));
+        return currentTableData.filter((td) => td.id !== Number(newId));
         // console.log(tableData);
       });
       // queryClient.setQueryData(["tableData"], (tableData) => {
@@ -69,6 +70,7 @@ function TaskItem({ item, index, arr, setArr, handleDelete }) {
       ///show error
       toast.error(`an error occurred: ${error.message}`);
     },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["tableData"] }),
   });
 
   // console.log("state");

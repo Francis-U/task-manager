@@ -34,14 +34,10 @@ export default function Taskmanager() {
     // initialData: [],
   });
 
-  // console.log("tableData from useQuery:", tableData);
   const queryClient = useQueryClient();
 
   // if (condition) {
   // }
-
-  // console.log("tableData");
-  // console.log(tableData);
 
   const inputRef = useRef(null);
   const taskRef = useRef(null);
@@ -127,8 +123,6 @@ export default function Taskmanager() {
   const [state, formAction, isPending] = useActionState(displayText, "");
   // console.log(formAction);
   // console.log(displayText);
-
-  // const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!isPending && state) {
