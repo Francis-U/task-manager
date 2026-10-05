@@ -16,6 +16,8 @@ function TaskItem({ item, index, arr, setArr, handleDelete }) {
     editingIndex == null ? setEditingIndex(index) : setEditingIndex(null);
   }
 
+  console.log("handleDelete:", handleDelete);
+
   const [state, formAction, isPending] = useActionState(updateTxt, "");
   const [stateCheckbox, formActionCheckbox, isPendingCheckbox] = useActionState(
     updateCheckbox,
@@ -95,6 +97,7 @@ function TaskItem({ item, index, arr, setArr, handleDelete }) {
   }, [state]);
 
   const formRef = useRef(null);
+  console.log("TaskItem rendered:", item.id);
   return (
     <div>
       {/* (e) => setIsChecked(e.target.value) */}
@@ -204,6 +207,11 @@ function TaskItem({ item, index, arr, setArr, handleDelete }) {
       </button>
       <button onClick={() => router.replace(`/task/${item.id}/`)}>
         Replace with task
+      </button>
+      <button
+        onClick={() => setArr([...arr, { id: Date.now(), text: "Test task" }])}
+      >
+        Change arr
       </button>
     </div>
   );

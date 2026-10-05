@@ -2,6 +2,9 @@
 import { Toaster } from "sonner";
 import "./globals.css";
 import Providers from "./Providers";
+import TaskUIProviders from "@/app/store/TaskUIProviders";
+// import TableDataProvider from "./components/TableDataProvider";
+// import TableDataProvider from "./components/TabkeDataProvider";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -27,7 +30,9 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         <Toaster />
         <div>
-          <Providers>{children}</Providers>
+          <TaskUIProviders>
+            <Providers>{children}</Providers>
+          </TaskUIProviders>
         </div>
       </body>
     </html>

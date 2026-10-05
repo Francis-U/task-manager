@@ -1,50 +1,77 @@
 "use client";
 import {
+  Suspense,
   useActionState,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
+  useReducer,
   useRef,
   useState,
 } from "react";
-import ServerInfo from "./ServerInfo";
+// import ServerInfo from "./ServerInfo";
 import TaskItem from "./TaskItem";
 import TaskStats from "./TaskStats";
 import TaskHeader from "./TaskHeader";
 import { displayText } from "../actions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import getTableData from "@/app/services/getTableData";
+import { useQueryClient } from "@tanstack/react-query";
+import { tableDataContext } from "@/app/components/TableDataProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { on, off } from "@/app/store/TaskUISlice";
+import dynamic from "next/dynamic";
+
+function reducer(reducerState, action) {
+  if (action.type === "on") {
+    return { showMessage: true };
+  }
+  if (action.type === "off") {
+    return { showMessage: false };
+  }
+  return reducerState;
+}
+
+const ServerInfo = dynamic(() => import("./ServerInfo")); ///nextjs lazy loading
+// const ServerInfo = lazy(() => import("./ServerInfo"));///react lazy loading
 
 export default function Taskmanager() {
   const [task, setTask] = useState("");
   const [arr, setArr] = useState([]);
   const [search, setSearch] = useState("");
-  const [showMessage, setShowMessage] = useState(false);
+  // const [showMessage, setShowMessage] = useState(false);
 
-  const {
-    data: tableData,
-    isPending: isPendingTableData,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["tableData"],
-    queryFn: getTableData,
-    // initialData: [],
+  const { tableData, isPendingTableData, isError, error } =
+    useContext(tableDataContext);
+
+  const [reducerState, dispatch] = useReducer(reducer, {
+    showMessage: false,
   });
+
+  // const {
+  //   data: tableData,
+  //   isPending: isPendingTableData,
+  //   isError,
+  //   error,
+  // } = useQuery({
+  //   queryKey: ["tableData"],
+  //   queryFn: getTableData,
+  //   // initialData: [],
+  // });
 
   const queryClient = useQueryClient();
 
-  // if (condition) {
-  // }
+  const dispatchRedux = useDispatch();
+  const stateRedux = useSelector((state) => state.taskUi.showMessage);
 
   const inputRef = useRef(null);
   const taskRef = useRef(null);
   const router = useRouter();
+
   // const externalList = ExternalTask;
 
-  // console.log("externallist");
+  // console.log("extern allist");
   // console.log(externalList);
   useEffect(() => {
     taskRef.current = task;
@@ -87,10 +114,14 @@ export default function Taskmanager() {
 
   useEffect(() => {
     if (tableData?.length > previousLength.current) {
-      setShowMessage(true);
+      // setShowMessage(true);
+      // dispatch({ type: "on" });
+      dispatchRedux(on());
 
       const timer = setTimeout(() => {
-        setShowMessage(false);
+        // setShowMessage(false);
+        // dispatch({ type: "off" });
+        dispatchRedux(off());
       }, 3000);
 
       previousLength.current = tableData?.length;
@@ -168,11 +199,14 @@ export default function Taskmanager() {
           handleDelete={handleDelete}
         />
       ))}
-      <TaskStats length={tableData?.length ?? 0} />
+      <TaskStats />
 
-      {showMessage && <div>Task added</div>}
+      {/* {reducerState.showMessage && <div>Task added</div>} */}
+      {stateRedux && <div>Task added</div>}
       {state && <div>new task: {state}</div>}
-      <ServerInfo />
+      <Suspense fallback={<p>working...</p>}>
+        <ServerInfo />
+      </Suspense>
 
       <Link href="/about">About</Link>
       <nav>
